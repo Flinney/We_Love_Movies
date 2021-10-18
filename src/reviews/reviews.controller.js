@@ -1,4 +1,3 @@
-const res = require("express/lib/response");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const mapProperties = require("../utils/map-properties");
 const service = require("./reviews.service");
