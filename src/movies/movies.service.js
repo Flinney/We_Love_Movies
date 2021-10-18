@@ -15,7 +15,15 @@ async function listByIsShowing() {
   return data;
 }
 
+function read(movieId) {
+  return knex("movies as m")
+    .select("*")
+    .where({ "m.movie_id": movieId })
+    .first();
+}
+
 module.exports = {
   list,
   listByIsShowing,
+  read,
 };
