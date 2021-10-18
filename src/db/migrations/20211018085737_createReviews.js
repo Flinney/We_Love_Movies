@@ -7,6 +7,7 @@ exports.up = function (knex) {
     table.foreign("critic_id").references("critic_id").inTable("critics");
     table.integer("movie_id").unsigned().notNullable();
     table.foreign("movie_id").references("movie_id").inTable("movies");
+    table.timestamps(true, true);
   });
 };
 
