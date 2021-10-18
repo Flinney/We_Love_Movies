@@ -24,7 +24,6 @@ async function list(req, res, next) {
   const data = res.locals.showing
     ? await service.listByIsShowing()
     : await service.list();
-  console.log(data);
   res.json({ data });
 }
 
