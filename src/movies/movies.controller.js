@@ -34,4 +34,5 @@ function read(req, res, next) {
 module.exports = {
   list: [filterByIsShowing, asyncErrorBoundary(list)],
   read: [asyncErrorBoundary(isValidId), read],
+  isValidId,
 };
