@@ -11,7 +11,6 @@ async function listByIsShowing() {
     .where({ "mt.is_showing": true })
     .groupBy("m.movie_id")
     .orderBy("m.movie_id");
-  console.log(data);
   return data;
 }
 
