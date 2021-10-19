@@ -23,6 +23,15 @@ function list() {
     .orderBy("t.theater_id");
 }
 
+function listById(movieId) {
+  return knex("theaters as t")
+    .join("movies_theaters as mt", "t.theater_id", "mt.theater_id")
+    .join("movies as m", "mt.movie_id", "m.movie_id")
+    .select("t.*", "mt.*")
+    .where({ "mt.is_showing": true, "m.movie_id": movieId });
+}
+
 module.exports = {
   list,
+  listById,
 };

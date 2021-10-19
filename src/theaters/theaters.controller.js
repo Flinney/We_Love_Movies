@@ -4,6 +4,10 @@ const service = require("./theaters.service");
 
 //middleware
 async function formatTheaters(req, res, next) {
+  const { movieId } = req.params;
+  if (movieId) {
+    return next();
+  }
   const data = await service.list();
   const reduceMovies = reduceProperties("theater_id", {
     movie_id: ["movies", null, "movie_id"],
@@ -18,11 +22,25 @@ async function formatTheaters(req, res, next) {
   next();
 }
 
+async function filterTheaters(req, res, next) {
+  const { movieId } = req.params;
+  if (!movieId) {
+    return next();
+  }
+  const theaters = await service.listById(movieId);
+  res.locals.data = theaters;
+  next();
+}
+
 function list(req, res, next) {
   const data = res.locals.data;
   res.json({ data });
 }
 
 module.exports = {
-  list: [asyncErrorBoundary(formatTheaters), list],
+  list: [
+    asyncErrorBoundary(formatTheaters),
+    asyncErrorBoundary(filterTheaters),
+    list,
+  ],
 };
