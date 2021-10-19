@@ -40,6 +40,22 @@ const createMappedReview = (req, res, next) => {
   return next();
 };
 
+const createMappedReviews = async (req, res, next) => {
+  const { movieId } = req.params;
+  const reviews = await service.list(movieId);
+
+  const mapReview = mapProperties({
+    preferred_name: "critic.preferred_name",
+    surname: "critic.surname",
+    organization_name: "critic.organization_name",
+  });
+
+  const mappedReviews = reviews.map((review) => mapReview(review));
+
+  res.locals.data = mappedReviews;
+  next();
+};
+
 function read(req, res, next) {
   const data = res.locals.review;
   res.json({ data });
@@ -59,6 +75,11 @@ async function destroy(req, res, next) {
   res.sendStatus(204);
 }
 
+function list(req, res, next) {
+  const data = res.locals.data;
+  res.json({ data });
+}
+
 module.exports = {
   read: [asyncErrorBoundary(isValidId), read],
   update: [
@@ -68,4 +89,5 @@ module.exports = {
     update,
   ],
   delete: [asyncErrorBoundary(isValidId), destroy],
+  list: [asyncErrorBoundary(createMappedReviews), list],
 };

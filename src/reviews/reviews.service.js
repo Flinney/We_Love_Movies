@@ -19,8 +19,17 @@ function destroy(reviewId) {
   return knex("reviews as r").where({ "r.review_id": reviewId }).del();
 }
 
+function list(movieId) {
+  return knex("reviews as r")
+    .join("movies as m", "r.movie_id", "m.movie_id")
+    .join("critics as c", "r.critic_id", "c.critic_id")
+    .select("r.*", "c.*")
+    .where({ "m.movie_id": movieId });
+}
+
 module.exports = {
   read,
   update,
   delete: destroy,
+  list,
 };
