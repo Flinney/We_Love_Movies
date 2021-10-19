@@ -15,7 +15,12 @@ function update(updatedReview) {
     .update(updatedReview, "*");
 }
 
+function destroy(reviewId) {
+  return knex("reviews as r").where({ "r.review_id": reviewId }).del();
+}
+
 module.exports = {
   read,
   update,
+  delete: destroy,
 };

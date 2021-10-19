@@ -54,6 +54,11 @@ async function update(req, res, next) {
   res.json({ data: res.locals.mappedReview });
 }
 
+async function destroy(req, res, next) {
+  await service.delete(res.locals.review.review_id);
+  res.sendStatus(204);
+}
+
 module.exports = {
   read: [asyncErrorBoundary(isValidId), read],
   update: [
@@ -62,4 +67,5 @@ module.exports = {
     createMappedReview,
     update,
   ],
+  delete: [asyncErrorBoundary(isValidId), destroy],
 };
