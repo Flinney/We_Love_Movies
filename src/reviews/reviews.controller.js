@@ -4,6 +4,13 @@ const service = require("./reviews.service");
 
 const VALID_REVIEW_PROPERTIES = ["content", "score"];
 
+//declaring helper function to nest data
+const mapReview = mapProperties({
+  preferred_name: "critic.preferred_name",
+  surname: "critic.surname",
+  organization_name: "critic.organization_name",
+});
+
 //middleware
 const isValidId = async (req, res, next) => {
   const { reviewId } = req.params;
@@ -21,15 +28,13 @@ const bodyHasValidProperties = (req, res, next) => {
     : next({ status: 404, message: "Not a valid property to update" });
 };
 
+//nesting critic data within review object
+//sqlite3 does not support returning from queries, so the response
+//object is created here with new review data updated conditonally
 const createMappedReview = (req, res, next) => {
-  const mapReview = mapProperties({
-    preferred_name: "critic.preferred_name",
-    surname: "critic.surname",
-    organization_name: "critic.organization_name",
-  });
-
   const mappedReview = mapReview(res.locals.review);
   res.locals.mappedReview = mappedReview;
+
   if (req.body.data.content) {
     mappedReview.content = req.body.data.content;
   }
@@ -40,15 +45,10 @@ const createMappedReview = (req, res, next) => {
   return next();
 };
 
+//nesting critic data for array of reviews
 const createMappedReviews = async (req, res, next) => {
   const { movieId } = req.params;
   const reviews = await service.list(movieId);
-
-  const mapReview = mapProperties({
-    preferred_name: "critic.preferred_name",
-    surname: "critic.surname",
-    organization_name: "critic.organization_name",
-  });
 
   const mappedReviews = reviews.map((review) => mapReview(review));
 

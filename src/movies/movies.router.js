@@ -4,6 +4,7 @@ const reviewsRouter = require("../reviews/reviews.router");
 const controller = require("./movies.controller");
 const methodNotAllowed = require("../errors/methodNotAllowed");
 
+//isValidId checks for valid movieId param before passing to nested routes
 router.use("/:movieId/theaters", controller.isValidId, theatersRouter);
 
 router.use("/:movieId/reviews", controller.isValidId, reviewsRouter);

@@ -8,6 +8,8 @@ const filterByIsShowing = (req, res, next) => {
   return next();
 };
 
+//converting movieId param to number before passing to service.
+//early return if not valid.
 const isValidId = async (req, res, next) => {
   const { movieId } = req.params;
   if (!Number(movieId)) {
@@ -20,6 +22,8 @@ const isValidId = async (req, res, next) => {
     : next({ status: 404, message: "Movie cannot be found." });
 };
 
+//conditonal service call, keeping as much data logic in
+//sql queries as possible. 
 async function list(req, res, next) {
   const data = res.locals.showing
     ? await service.listByIsShowing()
